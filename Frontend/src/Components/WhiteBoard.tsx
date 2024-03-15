@@ -1,4 +1,5 @@
 import { useLayoutEffect, useState,useRef, useEffect } from 'react'
+import { Socket } from "socket.io-client";
 import rough from 'roughjs';
 import Toolbar from "../Components/Toolbar"
 
@@ -13,8 +14,11 @@ interface drawingType{
     stroke:string
 }
 
+interface WhiteBoardProps{
+    socket:Socket|null
+}
 
-const WhiteBoard = () => {
+const WhiteBoard:React.FC<WhiteBoardProps> = ({socket}) => {
 
     const ctx = useRef(null)
     const drawingRef = useRef<HTMLCanvasElement>(null);
@@ -40,6 +44,9 @@ const WhiteBoard = () => {
         if(isDrawing){
             console.log(e.nativeEvent.offsetX,e.nativeEvent.offsetY);
 
+        
+        // socket?.emit("drawing_cordinates",drawing);
+
         const lastDrawing = drawing[drawing.length - 1];
         lastDrawing.path.push([e.nativeEvent.offsetX, e.nativeEvent.offsetY]);
         setdrawing([...drawing.slice(0, -1), lastDrawing]);
@@ -48,10 +55,17 @@ const WhiteBoard = () => {
 
     }
 
-
+    console.log(drawing);
+    
     useLayoutEffect(()=>{
         
         if(drawingRef.current){
+
+
+            // socket?.on('drawing_cordinates',drawing_cordinates=>{
+
+            //     setdrawing({...drawing,...drawing_cordinates});
+            // })
 
             drawingRef.current.height = window.innerHeight;
             drawingRef.current.width = window.innerWidth;
@@ -67,6 +81,7 @@ const WhiteBoard = () => {
             })
         }
     },[drawing])
+
 
     useEffect(()=>{
 
