@@ -4,7 +4,7 @@ import { func } from '../Controllers/func';
 const router = express.Router();
 
 
-router.get('/',func)
+// router.get('/',func)
 
 
 export default router;

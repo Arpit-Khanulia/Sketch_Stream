@@ -3,8 +3,10 @@ import router from './Routes/routes';
 import {createServer} from 'http'
 import {Server} from 'socket.io'
 import cors from 'cors'
+import path from 'path';
 
 
+const dirname = path.resolve();
 const app = express();
 const server = createServer(app);
 const io = new Server(server,{
@@ -16,11 +18,17 @@ const io = new Server(server,{
 });
 
 
+
 app.use(cors({
     origin:'*'
 }));
 
 app.use('/',router);
+
+app.use(express.static(path.join(dirname,"../Frontend/dist")));
+app.get('*',(req,res)=>{
+    res.sendFile(path.join(dirname,"../Frontend/dist/index.html"));
+})
 
 
 interface userdataType{

@@ -8,6 +8,8 @@ const routes_1 = __importDefault(require("./Routes/routes"));
 const http_1 = require("http");
 const socket_io_1 = require("socket.io");
 const cors_1 = __importDefault(require("cors"));
+const path_1 = __importDefault(require("path"));
+const dirname = path_1.default.resolve();
 const app = (0, express_1.default)();
 const server = (0, http_1.createServer)(app);
 const io = new socket_io_1.Server(server, {
@@ -21,6 +23,10 @@ app.use((0, cors_1.default)({
     origin: '*'
 }));
 app.use('/', routes_1.default);
+app.use(express_1.default.static(path_1.default.join(dirname, "../Frontend/dist")));
+app.get('*', (req, res) => {
+    res.sendFile(path_1.default.join(dirname, "../Frontend/dist/index.html"));
+});
 let userdata;
 io.on('connection', (socket) => {
     console.log('User Connected');
