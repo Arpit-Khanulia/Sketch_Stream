@@ -18,7 +18,8 @@ const App = () => {
 
   
   useEffect(()=>{
-    const newsocket = io("https://sketch-stream.vercel.app/",options)
+    // const newsocket = io("https://sketch-stream.vercel.app/",options)
+    const newsocket = io("http://localhost:3000",options)
     setSocket(newsocket);
 
     return () => {
