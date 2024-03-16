@@ -54,6 +54,12 @@ const ChatWindow:React.FC<ChatWindowProps> = ({socket}) => {
             setIncommingMsg(prevState => [...prevState, { chat: data.chat, name: data.name, uid: data.uid }]);
             
         })
+        socket?.on('disconnected',(data)=>{
+
+            console.log('user disconnected',data);
+            setIncommingMsg(prevState => [...prevState, { chat: data.chat, name: data.name, uid: data.uid }]);
+            
+        })
 
         socket?.on('chatbackend',(data:backendDatachat)=>{
 
@@ -66,6 +72,10 @@ const ChatWindow:React.FC<ChatWindowProps> = ({socket}) => {
         if (scrollDev.current) {
             scrollDev.current.scrollTop = scrollDev.current.scrollHeight;
         }
+
+        return () => {
+            socket?.emit('disconnected', { chat: "disconnected", name: user.name, uid: 0 });
+          };
     },[])
 
     console.log(incommingMsg);
@@ -92,7 +102,7 @@ const ChatWindow:React.FC<ChatWindowProps> = ({socket}) => {
                             {e.name}
                         </div>
                         </>}
-                        <div className={user.uid !== e.uid ? "chat-bubble  text-orange-400":"chat-bubble  text-green-400"}>{e.chat}</div>
+                        <div className={user.uid !== e.uid ? "chat-bubble  text-orange-400":"chat-bubble  text-lime-400"}>{e.chat}</div>
                     </div>
 
 

@@ -45,11 +45,11 @@ const WhiteBoard:React.FC<WhiteBoardProps> = ({socket}) => {
             console.log(e.nativeEvent.offsetX,e.nativeEvent.offsetY);
 
         
-        // socket?.emit("drawing_cordinates",drawing);
-
-        const lastDrawing = drawing[drawing.length - 1];
-        lastDrawing.path.push([e.nativeEvent.offsetX, e.nativeEvent.offsetY]);
-        setdrawing([...drawing.slice(0, -1), lastDrawing]);
+            
+            const lastDrawing = drawing[drawing.length - 1];
+            lastDrawing.path.push([e.nativeEvent.offsetX, e.nativeEvent.offsetY]);
+            setdrawing([...drawing.slice(0, -1), lastDrawing]);
+            socket?.emit("drawing_cordinates",drawing);
         }
         
 
@@ -60,12 +60,6 @@ const WhiteBoard:React.FC<WhiteBoardProps> = ({socket}) => {
     useLayoutEffect(()=>{
         
         if(drawingRef.current){
-
-
-            // socket?.on('drawing_cordinates',drawing_cordinates=>{
-
-            //     setdrawing({...drawing,...drawing_cordinates});
-            // })
 
             drawingRef.current.height = window.innerHeight;
             drawingRef.current.width = window.innerWidth;
@@ -90,6 +84,17 @@ const WhiteBoard:React.FC<WhiteBoardProps> = ({socket}) => {
         const ctx = ctxref;
 
     },[])
+
+    useEffect(() => {
+        if (socket) {
+            socket.on('drawing_cordinates', (drawing_cordinates) => {
+                // const receivedDrawing = JSON.parse(drawing_cordinates);
+                console.log('Received drawing coordinates:', drawing_cordinates);
+                setdrawing([...drawing,...drawing_cordinates]);
+                // Update your drawing state or perform any necessary actions here
+            });
+        }
+    }, []);
 
   return ( 
     <>
