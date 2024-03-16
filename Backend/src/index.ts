@@ -49,12 +49,18 @@ io.on('connection',(socket)=>{
         userdata = data;
         console.log(`${data.name} has joined with room id ${data.roomid} and user id ${data.uid}`);
         socket.join(data.roomid);
+        socket.broadcast.to(data.roomid).emit('newuser',{...data, uid: 0});
 
         socket.on('chatmessage',(message:messageType)=>{
 
             console.log('message aaya ',message);
             
             socket.broadcast.to(data.roomid).emit("chatbackend",message)
+        })
+
+        socket.on('drawing_cordinates',(drawing_cordinates)=>{
+            console.log('drawing data aaya',drawing_cordinates);
+            socket.broadcast.to(data.roomid).emit('drawing_cordinates',drawing_cordinates);
         })
     })
 })

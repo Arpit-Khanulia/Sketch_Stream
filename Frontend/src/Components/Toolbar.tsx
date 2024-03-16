@@ -1,6 +1,9 @@
 import { useAppDispatch } from "../Redux/hooks"
 import {MouseEvent} from 'react'
 import { setTool } from "../Redux/slice/ToolSlice";
+import { FaPencilAlt } from "react-icons/fa";
+import { IoShapes } from "react-icons/io5";
+import { BiSolidEraser } from "react-icons/bi";
 
 const Toolbar = () => {
 
@@ -14,15 +17,15 @@ const Toolbar = () => {
     }
     return (
         <div className=" flex sm:flex-col flex-row items-start justify-center mr-2 ml-2 mb-2 mt-1"> 
-            <ul className=" w-full menu menu-horizontal bg-base-200 rounded-box sm:flex-col flex-row items-center justify-center"> 
-                <li>
-                    <button name="pen"  onClick={handleClick}> <img src="https://icon-library.com/images/edit-pen-icon/edit-pen-icon-18.jpg" alt="loading..." className="sm:w-10 h-7" /></button>
+            <ul className="menu menu-horizontal sm:block bg-base-200 rounded-box z-99999">
+                <li >
+                    <button name="pen" onClick={handleClick} style={{ fontSize: "24px" }}> <FaPencilAlt /></button>                
                 </li>
                 <li>
-                    <button name="rectangle" onClick={handleClick}><img src="https://icon-library.com/images/shapes-icon/shapes-icon-12.jpg" alt="" className="sm:w-10 h-7" /></button>
+                    <button name="rectangle" onClick={handleClick} style={{ fontSize: "24px" }}><IoShapes /></button>
                 </li>
                 <li>
-                    <button name="eraser" onClick={handleClick} ><img src="https://icon-library.com/images/eraser-icon/eraser-icon-18.jpg" alt="" className="sm:w-10 h-7" /></button>
+                    <button name="eraser" onClick={handleClick} style={{ fontSize: "24px" }} ><BiSolidEraser /></button>
                 </li>
             </ul>
         </div>

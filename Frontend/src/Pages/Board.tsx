@@ -1,8 +1,8 @@
 import ChatWindow from "../Components/ChatWindow"
 import { useAppSelector } from "../Redux/hooks"
 import { Socket } from "socket.io-client"
-
 import WhiteBoard from "../Components/WhiteBoard"
+
 
 interface ChatPageProps{
   socket:Socket|null
@@ -15,9 +15,9 @@ const Board:React.FC<ChatPageProps> = ({socket}) => {
   
   return (
     <>
-      <div className="h-screen sm:flex overflow-hidden">
-          <WhiteBoard />
-        <div className="h-[45%] sm:h-screen flex flex-col items-end sm:w-1/3 w-full border-l-2 border-t-2 border-b-2 border-gray-700  ">
+      <div className="h-screen sm:flex overflow-hidden border border-gray-400">
+          <WhiteBoard socket={socket} />
+        <div className="h-[45%] sm:h-screen flex flex-col items-end sm:w-1/3 w-full border-l-2 border-t-2 border-gray-700  ">
           <ChatWindow socket = {socket} />
         </div>
       </div>

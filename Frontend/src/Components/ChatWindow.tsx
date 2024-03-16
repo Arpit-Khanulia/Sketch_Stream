@@ -2,6 +2,8 @@ import { Socket } from "socket.io-client";
 import { useState,useEffect,useRef } from "react";
 import { useAppSelector } from "../Redux/hooks";
 
+
+
 interface ChatWindowProps{
     socket:Socket|null
 }
@@ -11,10 +13,11 @@ interface backendDatachat{
 
     chat:string,
     name:string,
-    uid:string
+    uid:string | number
 }
 
 const ChatWindow:React.FC<ChatWindowProps> = ({socket}) => {
+
 
     const user = useAppSelector(state=>state.User);
 
@@ -44,7 +47,24 @@ const ChatWindow:React.FC<ChatWindowProps> = ({socket}) => {
 
     useEffect(()=>{
 
+
+        socket?.on('newuser',(data)=>{
+
+            console.log('ye aaya new user joined ka data',data);
+            setIncommingMsg(prevState => [...prevState, { chat: data.chat, name: data.name, uid: data.uid }]);
+            
+        })
+        socket?.on('disconnected',(data)=>{
+
+            console.log('user disconnected',data);
+            setIncommingMsg(prevState => [...prevState, { chat: data.chat, name: data.name, uid: data.uid }]);
+            
+        })
+
         socket?.on('chatbackend',(data:backendDatachat)=>{
+
+            console.log('waha se message aaya ',data);
+            
             console.log(data.chat);
             setIncommingMsg(prevState => [...prevState, { chat: data.chat, name: data.name, uid: data.uid }]);
         })
@@ -52,6 +72,10 @@ const ChatWindow:React.FC<ChatWindowProps> = ({socket}) => {
         if (scrollDev.current) {
             scrollDev.current.scrollTop = scrollDev.current.scrollHeight;
         }
+
+        return () => {
+            socket?.emit('disconnected', { chat: "disconnected", name: user.name, uid: 0 });
+          };
     },[])
 
     console.log(incommingMsg);
@@ -61,11 +85,30 @@ const ChatWindow:React.FC<ChatWindowProps> = ({socket}) => {
         <>
             <div ref = {scrollDev} className=" w-full h-full mt-5 p-3  flex-1 overflow-y-auto ">
 
-            {incommingMsg.map((e:backendDatachat,i)=>(
-                <div key={i} className={user.uid !== e.uid ? "chat chat-start" : "chat chat-end"}>
-                    <div className="chat-bubble mt-1 mb-1">{e.chat}</div>
-                </div>
-            ))}
+            {incommingMsg.map((e:backendDatachat,i)=>{
+
+                if(e.uid == 0) return <div key={i} className="text-center mb-2 mt-2 text-rose-500 ">{e.name} joined the room</div>
+                
+                return <>
+                
+                    <div key={i} className={user.uid !== e.uid ? "chat chat-start" : "chat chat-end"}>
+                        { (user.uid !== e.uid && e.uid !== incommingMsg[i-1]?.uid )&& <>
+                          <div className="chat-image avatar">
+                            <div className="w-10 rounded-full">
+                            <img alt="Tailwind CSS chat bubble component" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" />
+                            </div>
+                        </div>
+                        <div className="chat-header mb-1 mt-2">
+                            {e.name}
+                        </div>
+                        </>}
+                        <div className={user.uid !== e.uid ? "chat-bubble  text-orange-400":"chat-bubble  text-lime-400"}>{e.chat}</div>
+                    </div>
+
+
+              </> 
+
+            })}
             </div>
 
             <div className=" w-full flex  p-3 ">
